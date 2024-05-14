@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nft_market/presentation/pages/discover_page.dart';
 import 'package:nft_market/presentation/pages/sign_in_page.dart';
 import 'package:nft_market/presentation/widgets/button_widget.dart';
 import 'package:nft_market/presentation/widgets/input_widget.dart';
@@ -72,6 +73,20 @@ class SignUpPage extends StatelessWidget {
               lable: 'Password',
               isPassword: true,
             ),
+
+            // Action
+            const Gap(10),
+            Builder(builder: (context) {
+              return ButtonWidget(
+                text: 'Continue',
+                isFullWidth: true,
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => const DiscoverPage(),
+                  ));
+                },
+              );
+            })
           ]),
         )
       ]),
