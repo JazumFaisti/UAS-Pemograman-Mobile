@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nft_market/presentation/pages/discover_page.dart';
@@ -6,10 +7,20 @@ import 'package:nft_market/presentation/pages/sign_up_page.dart';
 import 'package:nft_market/presentation/widgets/button_widget.dart';
 import 'package:nft_market/presentation/widgets/input_widget.dart';
 import 'package:nft_market/presentation/widgets/page_widget.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-class SignInPage extends StatelessWidget {
+final supabase = Supabase.instance.client;
+
+class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
 
+  @override
+  State<SignInPage> createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return PageWidget(
@@ -63,12 +74,35 @@ class SignInPage extends StatelessWidget {
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(24)),
           child: Column(children: [
-            const InputWidget(
-              lable: 'Email',
+            const Text(
+              'Email',
             ),
-            const InputWidget(
-              lable: 'Password',
-              isPassword: true,
+            const SizedBox(
+              height: 12,
+            ),
+            TextField(
+              controller: emailController,
+              decoration: const InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all((Radius.circular(13)))),
+              ),
+            ),
+            const Text(
+              'Password',
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            TextField(
+              controller: passwordController,
+              decoration: const InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all((Radius.circular(13)))),
+              ),
             ),
 
             // Action
@@ -77,10 +111,15 @@ class SignInPage extends StatelessWidget {
               return ButtonWidget(
                 text: 'Sign In',
                 isFullWidth: true,
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const DiscoverPage(),
-                  ));
+                onPressed: () async {
+                  final authResponse = await supabase.auth
+                      .signInWithPassword(password: passwordController.text);
+                  if (authResponse.user != null) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => DiscoverPage()),
+                    );
+                  }
                 },
               );
             })
