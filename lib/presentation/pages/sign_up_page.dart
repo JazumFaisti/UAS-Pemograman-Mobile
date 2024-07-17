@@ -6,10 +6,20 @@ import 'package:nft_market/presentation/pages/sign_in_page.dart';
 import 'package:nft_market/presentation/widgets/button_widget.dart';
 import 'package:nft_market/presentation/widgets/input_widget.dart';
 import 'package:nft_market/presentation/widgets/page_widget.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-class SignUpPage extends StatelessWidget {
+final supabase = Supabase.instance.client;
+
+class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return PageWidget(
@@ -62,32 +72,77 @@ class SignUpPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(24)),
-          child: Column(children: [
-            const InputWidget(
-              lable: 'Full Name',
-            ),
-            const InputWidget(
-              lable: 'Email',
-            ),
-            const InputWidget(
-              lable: 'Password',
-              isPassword: true,
-            ),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Full Name',
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                TextField(
+                  controller: emailController,
+                  decoration: const InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all((Radius.circular(13)))),
+                  ),
+                ),
+                const Text(
+                  'Email',
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                TextField(
+                  controller: emailController,
+                  decoration: const InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all((Radius.circular(13)))),
+                  ),
+                ),
+                const Text(
+                  'Password',
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                TextField(
+                  controller: emailController,
+                  decoration: const InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all((Radius.circular(13)))),
+                  ),
+                ),
 
-            // Action
-            const Gap(10),
-            Builder(builder: (context) {
-              return ButtonWidget(
-                text: 'Continue',
-                isFullWidth: true,
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const DiscoverPage(),
-                  ));
-                },
-              );
-            })
-          ]),
+                // Action
+                const Gap(10),
+                Builder(builder: (context) {
+                  return ButtonWidget(
+                    text: 'Continue',
+                    isFullWidth: true,
+                    onPressed: () async {
+                      final authResponse = await supabase.auth.signUp(
+                          email: emailController.text,
+                          password: passwordController.text);
+                      if (authResponse.user != null) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DiscoverPage()),
+                        );
+                      }
+                    },
+                  );
+                })
+              ]),
         )
       ]),
     );
