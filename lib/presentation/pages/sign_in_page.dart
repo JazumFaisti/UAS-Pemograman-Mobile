@@ -73,57 +73,63 @@ class _SignInPageState extends State<SignInPage> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(24)),
-          child: Column(children: [
-            const Text(
-              'Email',
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all((Radius.circular(13)))),
-              ),
-            ),
-            const Text(
-              'Password',
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            TextField(
-              controller: passwordController,
-              decoration: const InputDecoration(
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all((Radius.circular(13)))),
-              ),
-            ),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Email',
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                TextField(
+                  controller: emailController,
+                  decoration: const InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all((Radius.circular(13)))),
+                  ),
+                ),
+                const Text(
+                  'Password',
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                TextField(
+                  controller: passwordController,
+                  decoration: const InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all((Radius.circular(13)))),
+                  ),
+                ),
 
-            // Action
-            const Gap(10),
-            Builder(builder: (context) {
-              return ButtonWidget(
-                text: 'Sign In',
-                isFullWidth: true,
-                onPressed: () async {
-                  final authResponse = await supabase.auth
-                      .signInWithPassword(password: passwordController.text);
-                  if (authResponse.user != null) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => DiscoverPage()),
-                    );
-                  }
-                },
-              );
-            })
-          ]),
+                // Action
+                const Gap(10),
+                Builder(builder: (context) {
+                  return ButtonWidget(
+                    text: 'Sign In',
+                    isFullWidth: true,
+                    onPressed: () async {
+                      final authResponse = await supabase.auth
+                          .signInWithPassword(
+                              email: emailController.text,
+                              password: passwordController.text);
+                      if (authResponse.user != null) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DiscoverPage()),
+                        );
+                      }
+                    },
+                  );
+                })
+              ]),
         )
       ]),
     );
